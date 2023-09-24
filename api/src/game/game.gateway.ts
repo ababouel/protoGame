@@ -1,0 +1,40 @@
+import {
+  WebSocketServer,
+  WebSocketGateway,
+  SubscribeMessage,
+} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { GameService } from './game.service'; // Import the GameService
+import { Inject, forwardRef } from '@nestjs/common';
+
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
+})
+export class GameGateway {
+  @WebSocketServer()
+  server: Server;
+
+  constructor(
+    @Inject(forwardRef(() => GameService))
+    private readonly gameService: GameService,
+  ) {}
+
+  @SubscribeMessage('joinGame')
+  joinRoom(client: Socket, room: string) {
+    client.join(room);
+    this.server.to(room).emit('startGame', 'lets start the game');
+  }
+  @SubscribeMessage('leaveGame')
+  handleLeaveRoom(client: Socket, room: string) {
+    client.leave(room);
+    console.log('state=> leaveGame');
+  }
+
+  @SubscribeMessage('update')
+  handleMessage(client: Socket, room: string) {
+    this.server.to(room).emit('updateGame', this.gameService.getGameData());
+    console.log('update');
+  }
+}

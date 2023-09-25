@@ -8,7 +8,7 @@ import { PlayerPosition, ballEntity, boardEntity, player1, player2 } from '../co
 import Matter, { Events } from 'matter-js';
 
 export class ClosedSystem  {
-    [x: string]: any;
+    // [x: string]: any;
     private engine: Matter.Engine;
     private ball: Matter.Body;
     private p1: Matter.Body;

@@ -1,12 +1,7 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import Matter, { Engine, World, Bodies } from 'matter-js';
 import { GameGateway } from './game.gateway';
-
-export interface gameDataType {
-  name: string;
-  position: [x: number, y: number, z: number];
-  size: [rad: number, w: number, h: number];
-}
+import { gameDataType } from './gameData';
 
 @Injectable()
 export class GameService {

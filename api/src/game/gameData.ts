@@ -1,3 +1,6 @@
+import Matter, {Bodies } from 'matter-js';
+
+
 interface boardType {
       posi:[number,number,number],
       size:[number,number],
@@ -5,11 +8,9 @@ interface boardType {
 }
 
 interface ballType {
-  ball:{
       posi: [x: number, y: number, z: number],
       size: [rad: number, w: number, h: number],
       txtu: string
-  }
 }
 interface playerType {
       nmPl: string,
@@ -18,41 +19,87 @@ interface playerType {
       txtu: string
 }
 
-interface gameType{
+export interface gameType{
   ball:  ballType,
   plyrs: [p1: playerType, p2: playerType],
   board: boardType
 }
 
-
-export let boardData: boardType = {
+export const bdDt: boardType = {
     posi:[0,0,0],
     size:[600,800],
     txtu: 'green'
 }
-export let ballData: ballType = {
-  ball:{
-    posi: [boardData.size[0]/2, boardData.size[1] - 70, 20],
-    size: [20,15,15],
-    txtu: "white"
-  }
+
+export const bl: ballType = {
+      posi: [bdDt.size[0]/2, bdDt.size[1]/2, 20],
+      size: [20,15,15],
+      txtu: "white"
 }
-export let player1: playerType = {
+
+export const p1: playerType = {
       nmPl:'player1',
-      posi: [0,0,0],
-      size: [0,0,0],
+      posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
+      size: [100,10,30],
       txtu: 'red'
 }
-export let player2: playerType = {
+
+export const p2: playerType = {
       nmPl: 'player2',
-      posi: [0,0,0],
-      size: [0,0,0],
+      posi: [bdDt.size[0]/2,70,15],
+      size: [100,10,30],
+      txtu: 'blue'
+}
+
+export let blDt: ballType = {
+    posi: [bdDt.size[0]/2, bdDt.size[1]/2, 20],
+    size: [20,15,15],
+    txtu: "white"
+}
+
+export let ply1: playerType = {
+      nmPl:'player1',
+      posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
+      size: [100,10,30],
+      txtu: 'red'
+}
+export let ply2: playerType = {
+      nmPl: 'player2',
+      posi: [bdDt.size[0]/2,70,15],
+      size: [100,10,30],
       txtu: 'blue'
 }
 
 export let gameData: gameType={
-  ball:  ballData,
-  plyrs: [player1,player2],
-  board: boardData
+  ball:  blDt,
+  plyrs: [ply1,ply2],
+  board: bdDt
 }
 
+export const ballOptions ={
+      mass: 0.2,
+      force: { x: 0.001, y: 0.003},
+      density: 0.001,
+      friction: 0,
+      restitution: 1,
+      frictionAir: 0,
+      inertia: Infinity,
+}
+
+export const staticOption = {
+            isStatic: true,
+}
+
+ export const Walls = [
+      Bodies.rectangle(bdDt.size[0] / 2, 0, bdDt.size[0], 40, staticOption),
+      Bodies.rectangle(bdDt.size[0] / 2, bdDt.size[1], bdDt.size[0], 40, staticOption),
+      Bodies.rectangle(0, bdDt.size[1] / 2, 40, bdDt.size[1], staticOption),
+      Bodies.rectangle(bdDt.size[0], bdDt.size[1] / 2, 40, bdDt.size[1], staticOption)
+ ]
+
+
+export function map_(value: number, inRange: Matter.Vector, outRange: Matter.Vector): number{
+      let out: number;
+      out = outRange.x + ((outRange.y - outRange.x) / (inRange.y - inRange.x)) * (value - inRange.x);
+      return (out);
+}

@@ -16,52 +16,49 @@ exports.GameService = void 0;
 const common_1 = require("@nestjs/common");
 const matter_js_1 = require("matter-js");
 const game_gateway_1 = require("./game.gateway");
+const gameData_1 = require("./gameData");
 let GameService = class GameService {
     constructor(webSocketGateway) {
         this.webSocketGateway = webSocketGateway;
-        this.bw = 600;
-        this.bh = 800;
-        this.engine = matter_js_1.Engine.create();
-        this.ball = matter_js_1.Bodies.circle(0, 0, 20, {
-            mass: 1,
-            force: { x: 0.5, y: 0.5 },
-            density: 0.01,
-            friction: 0,
-            restitution: 1,
-            frictionAir: 0,
-            inertia: Infinity,
-        });
-        const barUP = matter_js_1.Bodies.rectangle(this.bw / 2, 0, this.bw, 20, {
-            isStatic: true,
-        });
-        const barDOWN = matter_js_1.Bodies.rectangle(this.bw / 2, this.bh, this.bw, 20, {
-            isStatic: true,
-        });
-        const barLeft = matter_js_1.Bodies.rectangle(0, this.bh / 2, 20, this.bh, {
-            isStatic: true,
-        });
-        const barRight = matter_js_1.Bodies.rectangle(this.bw, this.bh / 2, 20, this.bh, {
-            isStatic: true,
-        });
+        this.gDt = gameData_1.gameData;
+        this.engine = matter_js_1.Engine.create({ gravity: { x: 0, y: 0 } });
+        this.ball = matter_js_1.Bodies.circle(gameData_1.bl.posi[0], gameData_1.bl.posi[1], gameData_1.bl.size[0], gameData_1.ballOptions);
+        this.pl1 = matter_js_1.Bodies.rectangle(gameData_1.p1.posi[0], gameData_1.p1.posi[1], gameData_1.p1.size[0], gameData_1.p1.size[1], gameData_1.staticOption);
+        this.pl2 = matter_js_1.Bodies.rectangle(gameData_1.p2.posi[0], gameData_1.p2.posi[1], gameData_1.p2.size[0], gameData_1.p2.size[1], gameData_1.staticOption);
+        matter_js_1.World.add(this.engine.world, gameData_1.walls);
         matter_js_1.World.add(this.engine.world, [
-            barUP,
-            barLeft,
-            barRight,
-            barDOWN,
             this.ball,
+            this.pl1,
+            this.pl2
         ]);
-        matter_js_1.Engine.update(this.engine);
+        matter_js_1.Runner.run(this.engine);
+        matter_js_1.Events.on(this.engine, 'beforeUpdate', () => {
+            gameData_1.blDt.posi[0] = (0, gameData_1.map_)(this.ball.position.x, { x: 0, y: gameData_1.bdDt.size[0] }, { x: -1, y: 1 });
+            gameData_1.blDt.posi[1] = (0, gameData_1.map_)(this.ball.position.y, { x: 0, y: gameData_1.bdDt.size[1] }, { x: -1, y: 1 });
+            gameData_1.ply1.posi[0] = (0, gameData_1.map_)(this.pl1.position.x, { x: 0, y: gameData_1.bdDt.size[0] }, { x: -1, y: 1 });
+            gameData_1.ply1.posi[1] = (0, gameData_1.map_)(this.pl1.position.y, { x: 0, y: gameData_1.bdDt.size[1] }, { x: -1, y: 1 });
+            gameData_1.ply2.posi[0] = (0, gameData_1.map_)(this.pl2.position.x, { x: 0, y: gameData_1.bdDt.size[0] }, { x: -1, y: 1 });
+            gameData_1.ply2.posi[1] = (0, gameData_1.map_)(this.pl2.position.y, { x: 0, y: gameData_1.bdDt.size[1] }, { x: -1, y: 1 });
+        });
+    }
+    movePlayer(nmpl, direction) {
+        matter_js_1.Events.on(this.engine, 'beforeUpdate', () => {
+            if (gameData_1.ply1.nmPl == nmpl) {
+                if (direction == 'right' && this.pl1.position.x < gameData_1.bdDt.size[0])
+                    this.pl1.position.x += 2 * 1.5;
+                if (direction == 'left' && this.pl1.position.x > 0)
+                    this.pl1.position.x -= 2 * 1.5;
+            }
+            if (gameData_1.ply2.nmPl == nmpl) {
+                if (direction == 'right' && this.pl2.position.x < gameData_1.bdDt.size[0])
+                    this.pl2.position.x += 2 * 1.5;
+                if (direction == 'left' && this.pl2.position.x > 0)
+                    this.pl2.position.x -= 2 * 1.5;
+            }
+        });
     }
     getGameData() {
-        console.log('PosX=> ' + this.ball.position.x);
-        console.log('PosY=> ' + this.ball.position.y);
-        const ballPos = this.ball.position;
-        this.gameData = {
-            name: 'ball',
-            position: ballPos,
-            size: [20, 15, 15],
-        };
-        const data = JSON.stringify(this.gameData);
+        const data = JSON.stringify(this.gDt);
         return data;
     }
 };

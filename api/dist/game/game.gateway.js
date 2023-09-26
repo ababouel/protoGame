@@ -25,13 +25,20 @@ let GameGateway = class GameGateway {
         client.join(room);
         this.server.to(room).emit('startGame', 'lets start the game');
     }
-    handleLeaveRoom(client, room) {
+    leaveRoom(client, room) {
         client.leave(room);
         console.log('state=> leaveGame');
     }
-    handleMessage(client, room) {
+    moveRight(client, nmPl) {
+        this.gameService.movePlayer(nmPl, 'right');
+    }
+    moveLeft(client, nmPl) {
+        this.gameService.movePlayer(nmPl, 'left');
+    }
+    gameUpdate(client, room) {
         this.server.to(room).emit('updateGame', this.gameService.getGameData());
         console.log('update');
+        console.log(client.id);
     }
 };
 exports.GameGateway = GameGateway;
@@ -50,13 +57,25 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, String]),
     __metadata("design:returntype", void 0)
-], GameGateway.prototype, "handleLeaveRoom", null);
+], GameGateway.prototype, "leaveRoom", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('moveRight'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, String]),
+    __metadata("design:returntype", void 0)
+], GameGateway.prototype, "moveRight", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('moveLeft'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, String]),
+    __metadata("design:returntype", void 0)
+], GameGateway.prototype, "moveLeft", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('update'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, String]),
     __metadata("design:returntype", void 0)
-], GameGateway.prototype, "handleMessage", null);
+], GameGateway.prototype, "gameUpdate", null);
 exports.GameGateway = GameGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {

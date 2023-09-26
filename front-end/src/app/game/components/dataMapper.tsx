@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { playerType, statusType } from "./player";
 import { ballType } from "./ball";
 import { boardType } from "./board";
-import { Socket } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
 
 
 
@@ -48,10 +48,12 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
   }
   socket.on('updateGame', data => {
       const parsedData = JSON.parse(data);
-      ballEntity.position[0] = parsedData.position.x;
-      ballEntity.position[1] = parsedData.position.y;
-      status.name = 'updateGame'
-      // console.log(parsedData.position[0]);
+      ballEntity.position[0] = parsedData.ball.posi[0];
+      ballEntity.position[1] = parsedData.ball.posi[1];
+      
+      // status.name = 'updateGame'
+      console.log("im here!!");
+      console.log(parsedData);
   })
   if (!socket.hasListeners('gameOver')){
     socket.on('gameOver', data => {
@@ -62,7 +64,7 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
   }
 }  
 
-
+export const socket =  io('http://localhost:5500');
 
 
 export const update = (socket:Socket, room: string) => {
@@ -76,15 +78,17 @@ export const update = (socket:Socket, room: string) => {
 }
 
 export let player1:playerType = {
-  position: [0,-330,15],
+  nmPl: 'player1',
+  posi: [0,-330,15],
   size: [100,10,30],
-  color: "red"
+  txtu: "red"
 }
 
 export let player2:playerType = {
-  position: [0,330,10],
+  nmPl: 'player2',
+  posi: [0,330,10],
   size: [100,10,30],
-  color: "blue"
+  txtu: "blue"
 }
 
 export let ballEntity:ballType = {

@@ -1,4 +1,4 @@
-import Matter, {Bodies } from 'matter-js';
+import Matter, { Bodies } from 'matter-js';
 
 
 interface boardType {
@@ -90,16 +90,16 @@ export const staticOption = {
             isStatic: true,
 }
 
- export const Walls = [
-      Bodies.rectangle(bdDt.size[0] / 2, 0, bdDt.size[0], 40, staticOption),
-      Bodies.rectangle(bdDt.size[0] / 2, bdDt.size[1], bdDt.size[0], 40, staticOption),
-      Bodies.rectangle(0, bdDt.size[1] / 2, 40, bdDt.size[1], staticOption),
-      Bodies.rectangle(bdDt.size[0], bdDt.size[1] / 2, 40, bdDt.size[1], staticOption)
- ]
+export const walls = [
+      Bodies.rectangle(bdDt.size[0] / 2, 0, bdDt.size[0] , 40, { isStatic: true }), // Top wall
+      Bodies.rectangle(bdDt.size[0] / 2, bdDt.size[1], bdDt.size[0], 40, { isStatic: true }), // Bottom wall
+      Bodies.rectangle(0, bdDt.size[1] / 2, 40, bdDt.size[1], { isStatic: true }), // Left wall
+      Bodies.rectangle(bdDt.size[0], bdDt.size[1] / 2, 40, bdDt.size[1], { isStatic: true }) // Right wall
+    ];
 
 
 export function map_(value: number, inRange: Matter.Vector, outRange: Matter.Vector): number{
       let out: number;
       out = outRange.x + ((outRange.y - outRange.x) / (inRange.y - inRange.x)) * (value - inRange.x);
-      return (out);
+      return (out * inRange.y/2);
 }

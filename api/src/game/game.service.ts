@@ -1,7 +1,7 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import Matter, {Events, Engine, World, Bodies } from 'matter-js';
+import Matter, {Events, Engine, World, Bodies, Runner } from 'matter-js';
 import { GameGateway } from './game.gateway';
-import { Walls,  ballOptions,  bdDt, bl, blDt, gameData, gameType, p1, p2, ply1, ply2, staticOption} from './gameData';
+import { walls,  ballOptions,  bdDt, bl, blDt, gameData, gameType, map_, p1, p2, ply1, ply2, staticOption} from './gameData';
 
 @Injectable()
 export class GameService {
@@ -23,35 +23,34 @@ export class GameService {
                       p1.size[0],p1.size[1],staticOption);
     this.pl2 = Bodies.rectangle(p2.posi[0],p2.posi[1],
                         p2.size[0],p2.size[1],staticOption);
-
+    World.add(this.engine.world, walls);
     World.add(this.engine.world, [
-      Walls,
       this.ball,
       this.pl1,
       this.pl2
     ]);
-    
-    Engine.update(this.engine);
-    Matter.Runner.run(this.engine);
+    Runner.run(this.engine);
     Events.on(this.engine, 'beforeUpdate', ()=>{
-      blDt.posi[0] = this.ball.position.x;
-      blDt.posi[1] = this.ball.position.y;
-      ply1.posi[0] = this.pl1.position.x;
-      ply1.posi[0] = this.pl1.position.y;
-      ply2.posi[0] = this.pl2.position.x;
-      ply2.posi[0] = this.pl2.position.y;
+      blDt.posi[0] = map_(this.ball.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
+      blDt.posi[1] = map_(this.ball.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
+      // console.log("y=> ",blDt.posi[0]);
+      // console.log("x=> ",blDt.posi[1]);
+      ply1.posi[0] = map_(this.pl1.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
+      ply1.posi[1] = map_(this.pl1.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
+      ply2.posi[0] = map_(this.pl2.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
+      ply2.posi[1] = map_(this.pl2.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
     });
   }
 
   movePlayer(nmpl: string, direction: string) {
     Events.on(this.engine, 'beforeUpdate',()=>{
-      if (p1.nmPl == nmpl) {
+      if (ply1.nmPl == nmpl) {
         if (direction == 'right' && this.pl1.position.x < bdDt.size[0])
           this.pl1.position.x += 2 * 1.5;
         if (direction == 'left' && this.pl1.position.x > 0)
           this.pl1.position.x -= 2 * 1.5;
       }  
-      if (p2.nmPl == nmpl) {
+      if (ply2.nmPl == nmpl) {
         if (direction == 'right' && this.pl2.position.x < bdDt.size[0])
           this.pl2.position.x += 2 * 1.5;
         if (direction == 'left' && this.pl2.position.x > 0)
@@ -61,7 +60,7 @@ export class GameService {
   }
 
 
-  getGameData(): any {    
+  getGameData(): any {
     const data: string = JSON.stringify(this.gDt);
     return data;
   }

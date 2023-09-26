@@ -5,6 +5,8 @@ export declare class GameGateway {
     server: Server;
     constructor(gameService: GameService);
     joinRoom(client: Socket, room: string): void;
-    handleLeaveRoom(client: Socket, room: string): void;
-    handleMessage(client: Socket, room: string): void;
+    leaveRoom(client: Socket, room: string): void;
+    moveRight(client: Socket, nmPl: string): void;
+    moveLeft(client: Socket, nmPl: string): void;
+    gameUpdate(client: Socket, room: string): void;
 }

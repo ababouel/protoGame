@@ -27,13 +27,23 @@ export class GameGateway {
     this.server.to(room).emit('startGame', 'lets start the game');
   }
   @SubscribeMessage('leaveGame')
-  handleLeaveRoom(client: Socket, room: string) {
+  leaveRoom(client: Socket, room: string) {
     client.leave(room);
     console.log('state=> leaveGame');
   }
 
+  @SubscribeMessage('moveRight')
+  moveRight(nmPl: string){
+    this.gameService.movePlayer(nmPl, 'right');
+  }
+  
+  @SubscribeMessage('moveLeft')
+  moveLeft(nmPl:string){
+    this.gameService.movePlayer(nmPl, 'left');
+  }
+
   @SubscribeMessage('update')
-  handleMessage(client: Socket, room: string) {
+  gameUpdate(room: string) {
     this.server.to(room).emit('updateGame', this.gameService.getGameData());
     console.log('update');
   }

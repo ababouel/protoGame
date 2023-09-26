@@ -43,13 +43,25 @@ export class GameService {
     });
   }
 
+  movePlayer(nmpl: string, direction: string) {
+    Events.on(this.engine, 'beforeUpdate',()=>{
+      if (p1.nmPl == nmpl) {
+        if (direction == 'right' && this.pl1.position.x < bdDt.size[0])
+          this.pl1.position.x += 2 * 1.5;
+        if (direction == 'left' && this.pl1.position.x > 0)
+          this.pl1.position.x -= 2 * 1.5;
+      }  
+      if (p2.nmPl == nmpl) {
+        if (direction == 'right' && this.pl2.position.x < bdDt.size[0])
+          this.pl2.position.x += 2 * 1.5;
+        if (direction == 'left' && this.pl2.position.x > 0)
+          this.pl2.position.x -= 2 * 1.5;
+      }
+    });
+  }
 
 
-  getGameData(): any {
-    console.log('PosX=> ' + this.ball.position.x);
-    console.log('PosY=> ' + this.ball.position.y);
-    const ballPos: [number, number, number] = this.ball.position;
-    
+  getGameData(): any {    
     const data: string = JSON.stringify(this.gDt);
     return data;
   }

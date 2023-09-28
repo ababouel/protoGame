@@ -39,14 +39,14 @@ export const bl: ballType = {
 
 export const p1: playerType = {
       nmPl:'player1',
-      posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
+      posi: [bdDt.size[0]/2, 70, 15],
       size: [100,10,30],
       txtu: 'red'
 }
 
 export const p2: playerType = {
       nmPl: 'player2',
-      posi: [bdDt.size[0]/2,70,15],
+      posi: [bdDt.size[0]/2,bdDt.size[1] - 70,15],
       size: [100,10,30],
       txtu: 'blue'
 }

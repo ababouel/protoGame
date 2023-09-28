@@ -1,6 +1,7 @@
 import { Box } from "@react-three/drei"
-import { useEffect, useRef } from "react";
+import { Component, useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { PlayerPosition, player1, player2, socket } from "./dataMapper";
 
 export interface playerType {
     nmPl: string,
@@ -12,8 +13,10 @@ export interface playerType {
 export interface statusType {
     name: string
 }
-export function Player(playerProps:playerType) {
+export function Player(playerProps:playerType)  {
     const player = useRef<THREE.Mesh>(null);
+    const arrowLeft = PlayerPosition('ArrowLeft');
+    const arrowRight = PlayerPosition('ArrowRight');
     
     useFrame(()=>{
         if (player.current){
@@ -21,17 +24,14 @@ export function Player(playerProps:playerType) {
             player.current.position.y = playerProps.posi[1];
             player.current.position.z = playerProps.posi[2];
         }
-    })
-    
-    useEffect(()=>{
-    //     if (PlayerPosition('ArrowLeft'))
-    //     socket.emit('left', player1.nmPl);
-    //   if (PlayerPosition('ArrowRight'))
-    //     socket.emit('right', player1.nmPl);
-    //   if (PlayerPosition('a'))
-    //     socket.emit('left', player2.nmPl);
-    //   if (PlayerPosition('d'))
-    //     socket.emit('right', player2.nmPl);
+        if (arrowLeft)
+            socket.emit('left', player1.nmPl);
+        if (arrowRight)
+            socket.emit('right', player1.nmPl);
+        // if (PlayerPosition('a'))
+        //     socket.emit('left', player2.nmPl);
+        // if (PlayerPosition('d'))
+        //     socket.emit('right', player2.nmPl);
     })
     return (
     <Box ref={player} args={playerProps.size}>

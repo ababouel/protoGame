@@ -34,11 +34,12 @@ export class GameService {
       blDt.posi[0] = map_(this.ball.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
       blDt.posi[1] = map_(this.ball.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
       // console.log("y=> ",blDt.posi[0]);
-      // console.log("x=> ",blDt.posi[1]);
       ply1.posi[0] = map_(this.pl1.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
       ply1.posi[1] = map_(this.pl1.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
-      ply2.posi[0] = map_(this.pl2.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
-      ply2.posi[1] = map_(this.pl2.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
+      console.log("x=> ",ply1.posi[0]);
+      console.log("y=> ",ply1.posi[1]);
+      // ply2.posi[0] = map_(this.pl2.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
+      // ply2.posi[1] = map_(this.pl2.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
     });
   }
 
@@ -56,6 +57,7 @@ export class GameService {
         if (direction == 'left' && this.pl2.position.x > 0)
           this.pl2.position.x -= 2 * 1.5;
       }
+      console.log("movePlayer");
     });
   }
 

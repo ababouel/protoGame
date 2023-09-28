@@ -50,10 +50,14 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
       const parsedData = JSON.parse(data);
       ballEntity.position[0] = parsedData.ball.posi[0];
       ballEntity.position[1] = parsedData.ball.posi[1];
-      
+      if (player1.nmPl == parsedData.plyrs[0].nmPl){
+        player1.posi[0] = parsedData.plyrs[0].posi[0];
+        player1.posi[1] = parsedData.plyrs[0].posi[1];
+      }
       // status.name = 'updateGame'
-      console.log("im here!!");
-      console.log(parsedData);
+      console.log("=>player[0].nmPl =>"+ parsedData.plyrs[0].nmPl);
+      console.log("=> players[0].x =>" + parsedData.plyrs[0].posi[0]);
+      console.log("=> players[0].y =>" + parsedData.plyrs[0].posi[1]);
   })
   if (!socket.hasListeners('gameOver')){
     socket.on('gameOver', data => {
@@ -86,7 +90,7 @@ export let player1:playerType = {
 
 export let player2:playerType = {
   nmPl: 'player2',
-  posi: [0,330,10],
+  posi: [0,330,15],
   size: [100,10,30],
   txtu: "blue"
 }

@@ -1,5 +1,5 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import Matter, {Events, Engine, World, Bodies, Runner } from 'matter-js';
+import Matter, {Events, Engine, World, Bodies, Runner, Constraint } from 'matter-js';
 import { GameGateway } from './game.gateway';
 import { walls,  ballOptions,  bdDt, bl, blDt, gameData, gameType, map_, p1, p2, ply1, ply2, staticOption} from './gameData';
 
@@ -23,6 +23,7 @@ export class GameService {
                       p1.size[0],p1.size[1],staticOption);
     this.pl2 = Bodies.rectangle(p2.posi[0],p2.posi[1],
                         p2.size[0],p2.size[1],staticOption);
+    
     World.add(this.engine.world, walls);
     World.add(this.engine.world, [
       this.ball,
@@ -36,8 +37,8 @@ export class GameService {
       // console.log("y=> ",blDt.posi[0]);
       ply1.posi[0] = map_(this.pl1.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
       ply1.posi[1] = map_(this.pl1.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
-      console.log("x=> ",ply1.posi[0]);
-      console.log("y=> ",ply1.posi[1]);
+      console.log("x=> ",this.pl1.position.x);
+      console.log("y=> ",this.pl1.position.y);
       // ply2.posi[0] = map_(this.pl2.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
       // ply2.posi[1] = map_(this.pl2.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
     });
@@ -45,19 +46,26 @@ export class GameService {
 
   movePlayer(nmpl: string, direction: string) {
     Events.on(this.engine, 'beforeUpdate',()=>{
+      // console.log(ply1.nmPl);
+      // console.log(nmpl);
       if (ply1.nmPl == nmpl) {
-        if (direction == 'right' && this.pl1.position.x < bdDt.size[0])
-          this.pl1.position.x += 2 * 1.5;
-        if (direction == 'left' && this.pl1.position.x > 0)
-          this.pl1.position.x -= 2 * 1.5;
+        if (direction == 'right' && (this.pl1.position.x + 70) < bdDt.size[0]){
+          this.pl1.position.x += 1;
+          if (this.pl1.position.x + 70 > bdDt.size[0])
+            this.pl1.position.x = 600 - 70;
+        }
+        if (direction == 'left' && (this.pl1.position.x + 70) > 0){
+          this.pl1.position.x -= 1;
+          if (this.pl1.position.x - 70 < 0)
+            this.pl1.position.x = 70;
+         }
       }  
       if (ply2.nmPl == nmpl) {
-        if (direction == 'right' && this.pl2.position.x < bdDt.size[0])
+        if (direction == 'right' && this.pl2.position.x + 100 < bdDt.size[0])
           this.pl2.position.x += 2 * 1.5;
-        if (direction == 'left' && this.pl2.position.x > 0)
+        if (direction == 'left' && this.pl2.position.x + 100 > 0)
           this.pl2.position.x -= 2 * 1.5;
       }
-      console.log("movePlayer");
     });
   }
 

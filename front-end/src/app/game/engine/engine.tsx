@@ -5,13 +5,13 @@ import { Component } from 'react';
 import { PlayerPosition, ballEntity, boardEntity, player1, player2 } from '../components/dataMapper';
 
 
-import Matter, { Events } from 'matter-js';
+import Matter, { Body, Events, Runner } from 'matter-js';
 
 export class ClosedSystem  {
     // [x: string]: any;
     private engine: Matter.Engine;
     private ball: Matter.Body;
-    private p1: Matter.Body;
+    public p1: Matter.Body;
     private p2: Matter.Body;
     constructor() {
       // Create an engine
@@ -20,7 +20,6 @@ export class ClosedSystem  {
       // Create walls for the closed system
       const wallOptions: Matter.IBodyDefinition = {
         isStatic: true,
-       
       };
   
       const wallThickness = 40;
@@ -51,25 +50,23 @@ export class ClosedSystem  {
 
     map_(value: number, inRange: Matter.Vector, outRange: Matter.Vector): number{
         let out: number;
-
         out = outRange.x + ((outRange.y - outRange.x) / (inRange.y - inRange.x)) * (value - inRange.x);
-        return (out);
+        return (out * inRange.y/2);
     }
 
-    getBallPosition(): { x: number; y: number } {
-        return {
-          x: this.ball.position.x,
-          y: this.ball.position.y
-        };
-      }
+    public applyForceP1(dir:number){
+      Body.setVelocity(this.p1,{x: dir*20,y:0});
+      console.log("velocity=> ", this.p1.position);
+    }
+
     private updateLoop() {
         Events.on(this.engine, 'beforeUpdate', ()=>{
-            let x : number = 0, y: number = 0;
-            x = this.map_(this.getBallPosition().x, {x: 0, y: boardEntity.size[0]}, {x: -1, y: 1});
-            y = this.map_(this.getBallPosition().y, {x: 0, y: boardEntity.size[1]}, {x: -1, y: 1});
-            console.log(x, y);
-            ballEntity.position[0] = x * boardEntity.size[0] / 2;
-            ballEntity.position[1] = y * boardEntity.size[1] / 2;
+            let bx : number = 0, by: number = 0;
+            bx = this.map_(this.ball.position.x, {x: 0, y: boardEntity.size[0]}, {x: -1, y: 1});
+            by = this.map_(this.ball.position.y, {x: 0, y: boardEntity.size[1]}, {x: -1, y: 1});
+            ballEntity.position[0] = bx ;
+            ballEntity.position[1] = by ;
+            player1.posi[0] = this.map_(this.p1.position.x, {x: 0, y: boardEntity.size[0]}, {x: -1, y: 1});
         })
       }
     }

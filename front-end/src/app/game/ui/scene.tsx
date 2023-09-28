@@ -5,21 +5,19 @@ import { CamScene } from "../components/camScene";
 import { Ball } from "../components/ball";
 import {Player } from "../components/player";
 import { Board } from "../components/board";
-import { ballEntity, boardEntity, player1, player2, socket, socketEventListener, update } from "../components/dataMapper";
+import { PlayerPosition, ballEntity, boardEntity, player1, player2, room, socket, socketEventListener, update } from "../components/dataMapper";
 import { useEffect } from "react";
-import { io } from "socket.io-client";
-import { Vector2 } from "three";
-import {  ClosedSystem } from "../engine/engine";
-import p2 from "p2";
-import { Box } from "@react-three/drei";
+
 import { Walls } from "../components/wall";
+import { ClosedSystem } from "../engine/engine";
 
 
 
 export function Scene () {
-  const room = 'gameRoom'
-  useEffect(()=>{socketEventListener(socket,room);},[]);
-  useEffect(()=>{update(socket,room)});
+  const left = PlayerPosition('ArrowLeft');
+  const right = PlayerPosition('ArrowRight');
+  // useEffect(()=>{socketEventListener(socket,room);},[]);
+  // useEffect(()=>{update(socket,room)});
   return (
     <Canvas >
         <CamScene/>

@@ -3,6 +3,7 @@ import { playerType, statusType } from "./player";
 import { ballType } from "./ball";
 import { boardType } from "./board";
 import { Socket, io } from "socket.io-client";
+import { ClosedSystem } from "../engine/engine";
 
 
 
@@ -55,9 +56,9 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
         player1.posi[1] = parsedData.plyrs[0].posi[1];
       }
       // status.name = 'updateGame'
-      console.log("=>player[0].nmPl =>"+ parsedData.plyrs[0].nmPl);
-      console.log("=> players[0].x =>" + parsedData.plyrs[0].posi[0]);
-      console.log("=> players[0].y =>" + parsedData.plyrs[0].posi[1]);
+      // console.log("=>player[0].nmPl =>"+ parsedData.plyrs[0].nmPl);
+      // console.log("=> players[0].x =>" + parsedData.plyrs[0].posi[0]);
+      // console.log("=> players[0].y =>" + parsedData.plyrs[0].posi[1]);
   })
   if (!socket.hasListeners('gameOver')){
     socket.on('gameOver', data => {
@@ -67,9 +68,8 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
     })
   }
 }  
-
+export const room = 'gameRoom';
 export const socket =  io('http://localhost:5500');
-
 
 export const update = (socket:Socket, room: string) => {
   
@@ -79,34 +79,35 @@ export const update = (socket:Socket, room: string) => {
       }
     }, 16);
     return () => clearInterval(intervalId);
-}
+  }
+  
+  export let player1:playerType = {
+    nmPl: 'player1',
+    posi: [0,-330,15],
+    size: [100,10,30],
+    txtu: "red"
+  }
+  
+  export let player2:playerType = {
+    nmPl: 'player2',
+    posi: [0,330,15],
+    size: [100,10,30],
+    txtu: "blue"
+  }
+  
+  export let ballEntity:ballType = {
+    position:[0,0,20],
+    size:[20,15,15],
+    color: "white",
+  }
 
-export let player1:playerType = {
-  nmPl: 'player1',
-  posi: [0,-330,15],
-  size: [100,10,30],
-  txtu: "red"
-}
-
-export let player2:playerType = {
-  nmPl: 'player2',
-  posi: [0,330,15],
-  size: [100,10,30],
-  txtu: "blue"
-}
-
-export let ballEntity:ballType = {
-  position:[0,0,20],
-  size:[20,15,15],
-  color: "white",
-}
-
-export let boardEntity:boardType = {
-  position:[0,0,0],
-  size:[600,800],
-  color:'green',
-}
-
-export let status:statusType = {
-  name: 'connect'
-}
+  export let boardEntity:boardType = {
+    position:[0,0,0],
+    size:[600,800],
+    color:'green',
+  }
+  
+  export let status:statusType = {
+    name: 'connect'
+  }
+  export const closedSys = new ClosedSystem();

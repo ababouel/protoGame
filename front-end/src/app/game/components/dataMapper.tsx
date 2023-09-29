@@ -55,10 +55,10 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
         player1.posi[0] = parsedData.plyrs[0].posi[0];
         player1.posi[1] = parsedData.plyrs[0].posi[1];
       }
-      // status.name = 'updateGame'
-      // console.log("=>player[0].nmPl =>"+ parsedData.plyrs[0].nmPl);
-      // console.log("=> players[0].x =>" + parsedData.plyrs[0].posi[0]);
-      // console.log("=> players[0].y =>" + parsedData.plyrs[0].posi[1]);
+      if (player2.nmPl == parsedData.plyrs[1].nmPl){
+        player2.posi[0] = parsedData.plyrs[1].posi[0];
+        player2.posi[1] = parsedData.plyrs[1].posi[1];
+      }
   })
   if (!socket.hasListeners('gameOver')){
     socket.on('gameOver', data => {
@@ -77,7 +77,7 @@ export const update = (socket:Socket, room: string) => {
       if (status.name == 'updateGame'){
         socket.emit('update', room );
       }
-    }, 16);
+    }, 1);
     return () => clearInterval(intervalId);
   }
   
@@ -110,4 +110,4 @@ export const update = (socket:Socket, room: string) => {
   export let status:statusType = {
     name: 'connect'
   }
-  export const closedSys = new ClosedSystem();
+  // export const closedSys = new ClosedSystem();

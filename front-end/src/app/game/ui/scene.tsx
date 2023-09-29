@@ -1,29 +1,24 @@
 "use client"
 
-import { Canvas } from "@react-three/fiber";
-import { CamScene } from "../components/camScene";
-import { Ball } from "../components/ball";
-import {Player } from "../components/player";
-import { Board } from "../components/board";
-import { PlayerPosition, ballEntity, boardEntity, player1, player2, room, socket, socketEventListener, update } from "../components/dataMapper";
 import { useEffect } from "react";
-
+import { Ball } from "../components/ball";
 import { Walls } from "../components/wall";
-import { ClosedSystem } from "../engine/engine";
-
+import { Canvas } from "@react-three/fiber";
+import { Board } from "../components/board";
+import { CamScene } from "../components/camScene";
+import {Player } from "../components/player";
+import { ballEntity, boardEntity, player1, player2, room, socket, socketEventListener, update } from "../components/dataMapper";
 
 
 export function Scene () {
-  const left = PlayerPosition('ArrowLeft');
-  const right = PlayerPosition('ArrowRight');
-  // useEffect(()=>{socketEventListener(socket,room);},[]);
-  // useEffect(()=>{update(socket,room)});
+  useEffect(()=>{socketEventListener(socket,room);},[]);
+  useEffect(()=>{update(socket,room)});
   return (
     <Canvas >
         <CamScene/>
-        <Player {... player1}/>
-        <Ball {... ballEntity}/>
         <Player {... player2}/>
+        <Ball {... ballEntity}/>
+        <Player {... player1}/>
         <Walls/>
         <Board {... boardEntity}/>        
     </Canvas>);

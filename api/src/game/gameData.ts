@@ -57,14 +57,14 @@ export let blDt: ballType = {
     txtu: "white"
 }
 
-export let ply1: playerType = {
-      nmPl:'player1',
+export let ply2: playerType = {
+      nmPl:'player2',
       posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
       size: [100,10,30],
       txtu: 'red'
 }
-export let ply2: playerType = {
-      nmPl: 'player2',
+export let ply1: playerType = {
+      nmPl: 'player1',
       posi: [bdDt.size[0]/2,70,15],
       size: [100,10,30],
       txtu: 'blue'

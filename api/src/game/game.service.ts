@@ -1,5 +1,5 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import Matter, {Events, Engine, World, Bodies, Runner, Constraint } from 'matter-js';
+import Matter, {Events, Engine, World, Bodies, Runner, Constraint, Body } from 'matter-js';
 import { GameGateway } from './game.gateway';
 import { walls,  ballOptions,  bdDt, bl, blDt, gameData, gameType, map_, p1, p2, ply1, ply2, staticOption} from './gameData';
 
@@ -34,37 +34,39 @@ export class GameService {
     Events.on(this.engine, 'beforeUpdate', ()=>{
       blDt.posi[0] = map_(this.ball.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
       blDt.posi[1] = map_(this.ball.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
-      // console.log("y=> ",blDt.posi[0]);
       ply1.posi[0] = map_(this.pl1.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
       ply1.posi[1] = map_(this.pl1.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
-      console.log("x=> ",this.pl1.position.x);
-      console.log("y=> ",this.pl1.position.y);
-      // ply2.posi[0] = map_(this.pl2.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
-      // ply2.posi[1] = map_(this.pl2.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
+      ply2.posi[0] = map_(this.pl2.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
+      ply2.posi[1] = map_(this.pl2.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
     });
   }
 
   movePlayer(nmpl: string, direction: string) {
     Events.on(this.engine, 'beforeUpdate',()=>{
-      // console.log(ply1.nmPl);
-      // console.log(nmpl);
       if (ply1.nmPl == nmpl) {
+        console.log(nmpl + " ",direction);
         if (direction == 'right' && (this.pl1.position.x + 70) < bdDt.size[0]){
-          this.pl1.position.x += 1;
+            Body.setPosition(this.pl1,{x:this.pl1.position.x + 1, y:this.pl1.position.y});
           if (this.pl1.position.x + 70 > bdDt.size[0])
-            this.pl1.position.x = 600 - 70;
+            Body.setPosition(this.pl1,{x: bdDt.size[0] - 70, y:this.pl1.position.y});
         }
         if (direction == 'left' && (this.pl1.position.x + 70) > 0){
-          this.pl1.position.x -= 1;
+           Body.setPosition(this.pl1,{x:this.pl1.position.x - 1, y:this.pl1.position.y}); 
           if (this.pl1.position.x - 70 < 0)
-            this.pl1.position.x = 70;
+            Body.setPosition(this.pl1,{x: 70, y:this.pl1.position.y}); 
          }
       }  
       if (ply2.nmPl == nmpl) {
-        if (direction == 'right' && this.pl2.position.x + 100 < bdDt.size[0])
-          this.pl2.position.x += 2 * 1.5;
-        if (direction == 'left' && this.pl2.position.x + 100 > 0)
-          this.pl2.position.x -= 2 * 1.5;
+        if (direction == 'right' && this.pl2.position.x + 100 < bdDt.size[0]){
+          Body.setPosition(this.pl2, {x:this.pl2.position.x + 4, y:this.pl2.position.y});
+          if (this.pl2.position.x + 70 > bdDt.size[0])
+            Body.setPosition(this.pl2, {x: bdDt.size[0] - 70, y:this.pl2.position.y});
+        }
+        if (direction == 'left' && this.pl2.position.x + 100 > 0){
+          Body.setPosition(this.pl2, {x:this.pl2.position.x - 1, y:this.pl2.position.y}); 
+          if (this.pl2.position.x - 70 < 0)
+            Body.setPosition(this.pl2, {x: 70, y:this.pl2.position.y}); 
+        }
       }
     });
   }

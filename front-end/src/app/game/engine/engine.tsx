@@ -12,7 +12,7 @@ export class ClosedSystem  {
     private engine: Matter.Engine;
     private ball: Matter.Body;
     public p1: Matter.Body;
-    private p2: Matter.Body;
+    public p2: Matter.Body;
     constructor() {
       // Create an engine
       this.engine = Matter.Engine.create({gravity:{x:0,y:0}});
@@ -54,11 +54,6 @@ export class ClosedSystem  {
         return (out * inRange.y/2);
     }
 
-    public applyForceP1(dir:number){
-      Body.setVelocity(this.p1,{x: dir*20,y:0});
-      console.log("velocity=> ", this.p1.position);
-    }
-
     private updateLoop() {
         Events.on(this.engine, 'beforeUpdate', ()=>{
             let bx : number = 0, by: number = 0;
@@ -66,7 +61,7 @@ export class ClosedSystem  {
             by = this.map_(this.ball.position.y, {x: 0, y: boardEntity.size[1]}, {x: -1, y: 1});
             ballEntity.position[0] = bx ;
             ballEntity.position[1] = by ;
-            player1.posi[0] = this.map_(this.p1.position.x, {x: 0, y: boardEntity.size[0]}, {x: -1, y: 1});
+            player1.posi[0] = this.map_(this.p2.position.x, {x: 0, y: boardEntity.size[0]}, {x: -1, y: 1});
         })
       }
     }

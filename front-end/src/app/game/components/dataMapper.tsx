@@ -35,31 +35,35 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
     socket.on('connect', () => {
       socket.emit('joinGame', room);
       status.name = 'startGame';
-      player1.nmPl = socket.id;
+      // player1.nmPl = socket.id;
     });
   };
 
   if (!socket.hasListeners('disconnect')){
-    
+    socket.on("disconnect", () => {
+      console.log(socket.id);
+      socket.emit('leaveGame', room);
+    });
   }
 
   if (!socket.hasListeners('joinedGame')){
     socket.on('joinedGame', (id:string,nbPl:number) => {
       console.log(id+" "+nbPl);
-      player1.nmPl = id;
-      if (nbPl == 2) 
+      if(player1.nmPl == '')
+        player1.nmPl = id;
+      else if (player1.nmPl != id && player2.nmPl == '')
+        player2.nmPl = id;
+      if (nbPl == 2){
+        console.log("player1=> "+player1.nmPl);
+        console.log("player2=> "+player2.nmPl);
         socket.emit('startGame', room);
-      console.log(status);
+      } 
+      status.nbPl = nbPl;
     })
   }
 
   if (!socket.hasListeners('startGame')){
-    socket.on('startGame',(data)=>{
-      const parsedData = JSON.parse(data);
-      if(parsedData.plyrs[0].nmPl == player1.nmPl)
-        player2.nmPl = parsedData.plyrs[1].nmPl;
-      else
-        player2.nmPl = parsedData.plyrs[0].nmPl;
+    socket.on('startGame',()=>{
       status.name = 'updateGame';});
   }
 
@@ -89,7 +93,7 @@ export const socket =  io('http://localhost:5500');
 
 export const update = (socket:Socket, room: string) => {
     const intervalId = setInterval(() => {
-      if (status.name == 'updateGame'){
+      if (status.name == 'updateGame' && status.nbPl == 2){
         socket.emit('update', room );
       }
     }, 1);
@@ -97,14 +101,14 @@ export const update = (socket:Socket, room: string) => {
   }
   
   export let player1:playerType = {
-    nmPl: 'player1',
+    nmPl: '',
     posi: [0,-330,15],
     size: [100,10,30],
     txtu: "red"
   }
   
   export let player2:playerType = {
-    nmPl: 'player2',
+    nmPl: '',
     posi: [0,330,15],
     size: [100,10,30],
     txtu: "blue"
@@ -123,5 +127,19 @@ export const update = (socket:Socket, room: string) => {
   }
   
   export let status:statusType = {
-    name: 'connect'
+    name: 'connect',
+    nbPl: 0
+  }
+
+
+  export function left(player:playerType){
+    player.posi[0] -= 10;
+    if (player.posi[0] - 60 < -boardEntity.size[0]/2)
+        player.posi[0] = -boardEntity.size[0]/2  + 60; 
+  }
+  
+ export function right(player:playerType){
+    player.posi[0] += 10;
+    if (player.posi[0] + 60 > boardEntity.size[0]/2)
+        player.posi[0] = boardEntity.size[0]/2 - 60;
   }

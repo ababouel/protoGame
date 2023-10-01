@@ -25,6 +25,7 @@ export class GameGateway {
   @SubscribeMessage('joinGame')
   joinRoom(client: Socket, room: string) {
     client.join(room);
+    console.log(client.id+" connected");
     if (gameData.plyrs[0].nmPl == '')
       gameData.plyrs[0].nmPl = client.id;
     else if (gameData.plyrs[1].nmPl == '')
@@ -36,6 +37,7 @@ export class GameGateway {
   @SubscribeMessage('leaveGame')
   leaveRoom(client: Socket, room: string) {
     client.leave(room);
+    console.log(client+" disconnected");
     if (gameData.plyrs[0].nmPl == client.id)
       gameData.plyrs[0].nmPl = '';
     else if (gameData.plyrs[1].nmPl == client.id)

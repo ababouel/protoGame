@@ -123,7 +123,7 @@ export const update = (socket:Socket, room: string) => {
   export let boardEntity:boardType = {
     position:[0,0,0],
     size:[600,800],
-    color:'green',
+    txtu:'background.jpg',
   }
   
   export let status:statusType = {

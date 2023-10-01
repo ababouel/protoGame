@@ -16,13 +16,13 @@ export interface statusType {
 }
 
 function left(player:playerType){
-    player.posi[0] -= 6;
+    player.posi[0] -= 10;
     if (player.posi[0] - 60 < -boardEntity.size[0]/2)
         player.posi[0] = -boardEntity.size[0]/2  + 60; 
 }
 
 function right(player:playerType){
-    player.posi[0] += 6;
+    player.posi[0] += 10;
     if (player.posi[0] + 60 > boardEntity.size[0]/2)
         player.posi[0] = boardEntity.size[0]/2 - 60;
 }

@@ -35,9 +35,9 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
   
   if (!socket.hasListeners('connect')){
     socket.on('connect', () => {
-      console.log('connected');
       socket.emit('joinGame', room);
       status.name = 'startGame';
+      player1.nmPl = socket.id;
     });
   };
   if (!socket.hasListeners('startGame')){

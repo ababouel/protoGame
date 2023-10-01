@@ -6,6 +6,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service'; // Import the GameService
 import { Inject, forwardRef } from '@nestjs/common';
+import { gameData } from './gameData';
 
 @WebSocketGateway({
   cors: {
@@ -24,13 +25,30 @@ export class GameGateway {
   @SubscribeMessage('joinGame')
   joinRoom(client: Socket, room: string) {
     client.join(room);
-    this.server.to(room).emit('startGame', 'lets start the game');
+    if (gameData.plyrs[0].nmPl == '')
+      gameData.plyrs[0].nmPl = client.id;
+    else if (gameData.plyrs[1].nmPl == '')
+      gameData.plyrs[1].nmPl = client.id; 
+    this.server.to(room).emit('joinedGame', client.id);
   }
+
   @SubscribeMessage('leaveGame')
   leaveRoom(client: Socket, room: string) {
     client.leave(room);
+
+    if (gameData.plyrs[0].nmPl == client.id)
+      gameData.plyrs[0].nmPl = '';
+    else if (gameData.plyrs[1].nmPl == client.id)
+      gameData.plyrs[1].nmPl = ''; 
     // console.log('state=> leaveGame');
   }
+
+  @SubscribeMessage('startGame')
+  startGame(client: Socket, room: string){
+    this.gameService.startgame();
+    this.server.to(room).emit('startGame', 'lets start the game' + client.id);
+  }
+  
 
   @SubscribeMessage('moveRight')
   moveRight(client:Socket, room:string){

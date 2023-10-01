@@ -20,9 +20,10 @@ interface playerType {
 }
 
 export interface gameType{
-  ball:  ballType,
-  plyrs: [p1: playerType, p2: playerType],
-  board: boardType
+      nbPl:number,
+      ball:  ballType,
+      plyrs: [p1: playerType, p2: playerType],
+      board: boardType
 }
 
 export const bdDt: boardType = {
@@ -71,9 +72,10 @@ export let ply1: playerType = {
 }
 
 export let gameData: gameType={
-  ball:  blDt,
-  plyrs: [ply1,ply2],
-  board: bdDt
+      nbPl: 0,
+      ball:  blDt,
+      plyrs: [ply1,ply2],
+      board: bdDt
 }
 
 export const ballOptions ={

@@ -3,8 +3,6 @@ import { playerType, statusType } from "./player";
 import { ballType } from "./ball";
 import { boardType } from "./board";
 import { Socket, io } from "socket.io-client";
-import { ClosedSystem } from "../engine/engine";
-
 
 
 export function PlayerPosition(direction:string) : boolean{
@@ -40,13 +38,31 @@ export const socketEventListener = async (socket: Socket, room: string) =>   {
       player1.nmPl = socket.id;
     });
   };
-  if (!socket.hasListeners('startGame')){
-    socket.on('startGame', msg => {
-      console.log(msg);
-      status.name = 'updateGame';
+
+  if (!socket.hasListeners('disconnect')){
+    
+  }
+
+  if (!socket.hasListeners('joinedGame')){
+    socket.on('joinedGame', (id:string,nbPl:number) => {
+      console.log(id+" "+nbPl);
+      player1.nmPl = id;
+      if (nbPl == 2) 
+        socket.emit('startGame', room);
       console.log(status);
     })
   }
+
+  if (!socket.hasListeners('startGame')){
+    socket.on('startGame',(data)=>{
+      const parsedData = JSON.parse(data);
+      if(parsedData.plyrs[0].nmPl == player1.nmPl)
+        player2.nmPl = parsedData.plyrs[1].nmPl;
+      else
+        player2.nmPl = parsedData.plyrs[0].nmPl;
+      status.name = 'updateGame';});
+  }
+
   socket.on('updateGame', data => {
       const parsedData = JSON.parse(data);
       ballEntity.position[0] = parsedData.ball.posi[0];
@@ -72,7 +88,6 @@ export const room = 'gameRoom';
 export const socket =  io('http://localhost:5500');
 
 export const update = (socket:Socket, room: string) => {
-  
     const intervalId = setInterval(() => {
       if (status.name == 'updateGame'){
         socket.emit('update', room );
@@ -110,4 +125,3 @@ export const update = (socket:Socket, room: string) => {
   export let status:statusType = {
     name: 'connect'
   }
-  // export const closedSys = new ClosedSystem();

@@ -39,25 +39,13 @@ export function Player(playerProps:playerType)  {
             player.current.position.y = playerProps.posi[1];
             player.current.position.z = playerProps.posi[2];
         }
-        if (playerProps.nmPl == player1.nmPl) {
-            if (arrowLeft){
-                left(playerProps);
-                socket.emit('moveLeft',room,player1.nmPl);
-            }
-            if (arrowRight){
-                right(playerProps);
-                socket.emit('moveRight',room,player1.nmPl);
-            }
+        if (arrowLeft){
+            left(playerProps);
+            socket.emit('moveLeft',room,player1.nmPl);
         }
-        if (playerProps.nmPl == player2.nmPl) {
-            if (aLeft){
-                left(playerProps);
-                socket.emit('moveLeft',room,player2.nmPl);
-            }
-            if (dRight){
-                right(playerProps);
-                socket.emit('moveRight',room,player2.nmPl);
-            }
+        if (arrowRight){
+            right(playerProps);
+            socket.emit('moveRight',room,player1.nmPl);
         }
     });
     return (

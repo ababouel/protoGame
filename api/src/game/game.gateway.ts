@@ -28,44 +28,43 @@ export class GameGateway {
     if (gameData.plyrs[0].nmPl == '')
       gameData.plyrs[0].nmPl = client.id;
     else if (gameData.plyrs[1].nmPl == '')
-      gameData.plyrs[1].nmPl = client.id; 
-    this.server.to(room).emit('joinedGame', client.id);
+      gameData.plyrs[1].nmPl = client.id;
+    gameData.nbPl += 1; 
+    this.server.to(room).emit('joinedGame', client.id,gameData.nbPl);
   }
 
   @SubscribeMessage('leaveGame')
   leaveRoom(client: Socket, room: string) {
     client.leave(room);
-
     if (gameData.plyrs[0].nmPl == client.id)
       gameData.plyrs[0].nmPl = '';
     else if (gameData.plyrs[1].nmPl == client.id)
-      gameData.plyrs[1].nmPl = ''; 
-    // console.log('state=> leaveGame');
+      gameData.plyrs[1].nmPl = '';
+    this.gameService.stopGame();
+    gameData.nbPl -= 1;
   }
 
   @SubscribeMessage('startGame')
   startGame(client: Socket, room: string){
     this.gameService.startgame();
-    this.server.to(room).emit('startGame', 'lets start the game' + client.id);
+    this.server.to(room).emit('startGame', this.gameService.getGameData());
   }
   
 
   @SubscribeMessage('moveRight')
   moveRight(client:Socket, room:string){
-    this.gameService.movePlayer(room[1], 'right');
+    this.gameService.movePlayer('right',client.id);
     this.server.to(room).emit('updateGame', this.gameService.getGameData());
   }
 
   @SubscribeMessage('moveLeft')
   moveLeft(client:Socket,room:string){
-    this.gameService.movePlayer(room[1], 'left');
+    this.gameService.movePlayer('left',client.id);
     this.server.to(room).emit('updateGame', this.gameService.getGameData());
   }
 
   @SubscribeMessage('update')
   gameUpdate(client: Socket,room: string) {
     this.server.to(room).emit('updateGame', this.gameService.getGameData());
-    // console.log('update');
-    // console.log(client.id);
   }
 }

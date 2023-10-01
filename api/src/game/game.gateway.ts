@@ -35,13 +35,13 @@ export class GameGateway {
   @SubscribeMessage('moveRight')
   moveRight(client:Socket, room:string){
     this.gameService.movePlayer(room[1], 'right');
-    // this.server.to(room).emit('updateGame', this.gameService.getGameData());
+    this.server.to(room).emit('updateGame', this.gameService.getGameData());
   }
 
   @SubscribeMessage('moveLeft')
   moveLeft(client:Socket,room:string){
     this.gameService.movePlayer(room[1], 'left');
-    // this.server.to(room).emit('updateGame', this.gameService.getGameData());
+    this.server.to(room).emit('updateGame', this.gameService.getGameData());
   }
 
   @SubscribeMessage('update')

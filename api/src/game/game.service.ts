@@ -15,7 +15,6 @@ export class GameService {
     @Inject(forwardRef(() => GameGateway))
     private readonly webSocketGateway: GameGateway,
   ) {
-    // Create a Matter.js engine
     this.gDt = gameData;
     this.engine = Engine.create({gravity:{x:0,y:0}});
     this.ball = Bodies.circle(bl.posi[0], bl.posi[1], bl.size[0], ballOptions);
@@ -42,33 +41,30 @@ export class GameService {
   }
 
   movePlayer(nmpl: string, direction: string) {
-    Events.on(this.engine, 'beforeUpdate',()=>{
       if (ply1.nmPl == nmpl) {
-        console.log(nmpl + " ",direction);
-        if (direction == 'right' && (this.pl1.position.x + 70) < bdDt.size[0]){
-            Body.setPosition(this.pl1,{x:this.pl1.position.x + 1, y:this.pl1.position.y});
-          if (this.pl1.position.x + 70 > bdDt.size[0])
-            Body.setPosition(this.pl1,{x: bdDt.size[0] - 70, y:this.pl1.position.y});
+        if (direction == 'right' && (this.pl1.position.x + 60) < bdDt.size[0]){
+            Body.setPosition(this.pl1,{x:this.pl1.position.x + 6, y:this.pl1.position.y});
+          if (this.pl1.position.x + 60 > bdDt.size[0])
+            Body.setPosition(this.pl1,{x: bdDt.size[0] - 60, y:this.pl1.position.y});
         }
-        if (direction == 'left' && (this.pl1.position.x + 70) > 0){
-           Body.setPosition(this.pl1,{x:this.pl1.position.x - 1, y:this.pl1.position.y}); 
-          if (this.pl1.position.x - 70 < 0)
-            Body.setPosition(this.pl1,{x: 70, y:this.pl1.position.y}); 
+        if (direction == 'left' && (this.pl1.position.x + 60) > 0){
+           Body.setPosition(this.pl1,{x:this.pl1.position.x - 6, y:this.pl1.position.y}); 
+          if (this.pl1.position.x - 60 < 0)
+            Body.setPosition(this.pl1,{x: 60, y:this.pl1.position.y}); 
          }
       }  
       if (ply2.nmPl == nmpl) {
-        if (direction == 'right' && this.pl2.position.x + 100 < bdDt.size[0]){
-          Body.setPosition(this.pl2, {x:this.pl2.position.x + 4, y:this.pl2.position.y});
-          if (this.pl2.position.x + 70 > bdDt.size[0])
-            Body.setPosition(this.pl2, {x: bdDt.size[0] - 70, y:this.pl2.position.y});
+        if (direction == 'right' && this.pl2.position.x + 60 < bdDt.size[0]){
+          Body.setPosition(this.pl2, {x:this.pl2.position.x + 6, y:this.pl2.position.y});
+          if (this.pl2.position.x + 60 > bdDt.size[0])
+            Body.setPosition(this.pl2, {x: bdDt.size[0] - 60, y:this.pl2.position.y});
         }
-        if (direction == 'left' && this.pl2.position.x + 100 > 0){
-          Body.setPosition(this.pl2, {x:this.pl2.position.x - 1, y:this.pl2.position.y}); 
-          if (this.pl2.position.x - 70 < 0)
-            Body.setPosition(this.pl2, {x: 70, y:this.pl2.position.y}); 
+        if (direction == 'left' && this.pl2.position.x + 60 > 0){
+          Body.setPosition(this.pl2, {x:this.pl2.position.x - 6, y:this.pl2.position.y}); 
+          if (this.pl2.position.x - 60 < 0)
+            Body.setPosition(this.pl2, {x: 60, y:this.pl2.position.y}); 
         }
-      }
-    });
+      } 
   }
 
 

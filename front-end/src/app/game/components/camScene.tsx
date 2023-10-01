@@ -10,9 +10,9 @@ function Cam() {
         <PerspectiveCamera
         makeDefault 
         position={[0, 0, 545]} 
-        fov={75}  
+        fov={80}  
         near={0.1}  
-        far={1000} 
+        far={5000} 
         aspect={window.innerWidth/window.innerHeight}
         up={[0,0,1]}
         />

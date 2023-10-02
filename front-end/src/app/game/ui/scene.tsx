@@ -6,14 +6,16 @@ import { Walls } from "../components/wall";
 import { Canvas } from "@react-three/fiber";
 import { Board } from "../components/board";
 import { CamScene } from "../components/camScene";
-import {Player, playerType } from "../components/player";
-import { PlayerPosition, ballEntity, boardEntity, player1, player2, room, socket, socketEventListener, update } from "../components/dataMapper";
+import {Player } from "../components/player";
+import { ballEntity, boardEntity, player1, player2, room, socket} from "../entity/entity";
+import { socketEventListener, update } from "../utils/utils";
 
 
-export function Scene () {
+export function SceneGame () {
   
   useEffect(()=>{socketEventListener(socket,room);},[]);
   useEffect(()=>{update(socket,room)});
+
   return (
     <Canvas >
         <CamScene/>
@@ -21,7 +23,7 @@ export function Scene () {
         <Ball {... ballEntity}/>
         <Player {... player1}/>
         <Walls/>
-        <Board {... boardEntity}/>        
+        <Board {... boardEntity}/>
     </Canvas>);
 }
 

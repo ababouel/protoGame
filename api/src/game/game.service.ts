@@ -1,7 +1,8 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import Matter, {Events, Engine, World, Bodies, Runner, Constraint, Body } from 'matter-js';
 import { GameGateway } from './game.gateway';
-import { walls,  ballOptions,  bdDt, bl, blDt, gameData, gameType, map_, p1, p2, ply1, ply2, staticOption} from './gameData';
+import { walls,  ballOptions,  bdDt, bl, blDtS1,blDtS2, gameDataS1,gameDataS2, gameType, p1, p2, ply1S1, ply2S1, ply1S2,ply2S2,staticOption} from './gameData';
+import { updateBallPosition, updatePlayerS1SPosition, updatePlayerS2SPosition } from './utils';
 
 @Injectable()
 export class GameService {
@@ -9,13 +10,13 @@ export class GameService {
   private ball: Matter.Body;
   private pl1: Matter.Body; 
   private pl2: Matter.Body;
-  private gDt: gameType;
+  private gDtS1: gameType;
+  private gDtS2: gameType;
 
-  constructor(
-    @Inject(forwardRef(() => GameGateway))
-    private readonly webSocketGateway: GameGateway,
-  ) {
-    this.gDt = gameData;
+  constructor() 
+  {
+    this.gDtS1 = gameDataS1;
+    this.gDtS2 = gameDataS2;
     this.engine = Engine.create({gravity:{x:0,y:0}});
     this.ball = Bodies.circle(bl.posi[0], bl.posi[1], bl.size[0], ballOptions);
     this.pl1 = Bodies.rectangle(p1.posi[0],p1.posi[1],
@@ -28,10 +29,9 @@ export class GameService {
       this.pl1,
       this.pl2
     ]);
-  }
+}
 
-startgame(){
-
+startgame() {
 Events.on(this.engine, 'collisionStart', (event) => {
     event.pairs.forEach((collision) => {
       const ball = collision.bodyA as Body;
@@ -46,25 +46,23 @@ Events.on(this.engine, 'collisionStart', (event) => {
 });
 
 Events.on(this.engine, 'beforeUpdate', ()=>{
-      blDt.posi[0] = map_(this.ball.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
-      blDt.posi[1] = map_(this.ball.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
-      ply1.posi[0] = map_(this.pl1.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
-      ply1.posi[1] = map_(this.pl1.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
-      ply2.posi[0] = map_(this.pl2.position.x, {x: 0, y: bdDt.size[0]}, {x: -1, y: 1});
-      ply2.posi[1] = map_(this.pl2.position.y, {x: 0, y: bdDt.size[1]}, {x: -1, y: 1});
-    });
+  updateBallPosition(this.ball);
+  updatePlayerS1SPosition(this.pl1,this.pl2);
+  updatePlayerS2SPosition(this.pl1,this.pl2);
+});
 
 Runner.run(this.engine);
 }
 
 stopGame(){
+  Engine.clear(this.engine);
   Runner.stop(Runner.run(this.engine));
 }
 
-movePlayer(direction: string, client:string) {
-    if (ply1.nmPl == client) 
+movePlayer(direction: string, client:string, clients: [string,string]) {
+    if (clients[0] == client) 
       this.processDataplayer(this.pl1,direction);
-    if (ply2.nmPl == client)
+    if (clients[1] == client)
       this.processDataplayer(this.pl2,direction);
 }
 
@@ -81,9 +79,12 @@ private processDataplayer(player :Matter.Body, direction:string) {
   } 
 }
 
-getGameData(): any {
-  const data: string = JSON.stringify(this.gDt);
+getGameDataS1(): any {
+  const data: string = JSON.stringify(this.gDtS1);
   return (data);
 }
-
+getGameDataS2(): any {
+  const data: string = JSON.stringify(this.gDtS2);
+  return (data);
+}
 }

@@ -1,8 +1,7 @@
 
 
 
-import { Component } from 'react';
-import { PlayerPosition, ballEntity, boardEntity, player1, player2 } from '../components/dataMapper';
+import { ballEntity, boardEntity, player1, player2 } from '../entity/entity';
 
 
 import Matter, { Body, Events, Runner } from 'matter-js';

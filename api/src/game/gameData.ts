@@ -7,12 +7,12 @@ interface boardType {
       txtu: string
 }
 
-interface ballType {
+export interface ballType {
       posi: [x: number, y: number, z: number],
       size: [rad: number, w: number, h: number],
       txtu: string
 }
-interface playerType {
+export interface playerType {
       nmPl: string,
       posi: [x:number, y:number, z:number],
       size:[width:number,height:number,depth:number],
@@ -38,6 +38,8 @@ export const bl: ballType = {
       txtu: "white"
 }
 
+export let clients : [string,string] = [null,null];
+
 export const p1: playerType = {
       nmPl:'player1',
       posi: [bdDt.size[0]/2, 70, 15],
@@ -52,29 +54,54 @@ export const p2: playerType = {
       txtu: 'blue'
 }
 
-export let blDt: ballType = {
+export let blDtS1: ballType = {
     posi: [bdDt.size[0]/2, bdDt.size[1]/2, 20],
     size: [20,15,15],
     txtu: "white"
 }
 
-export let ply2: playerType = {
+export let ply2S1: playerType = {
       nmPl:'',
       posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
       size: [100,10,30],
       txtu: 'red'
 }
-export let ply1: playerType = {
+export let ply1S1: playerType = {
       nmPl: '',
       posi: [bdDt.size[0]/2,70,15],
       size: [100,10,30],
       txtu: 'blue'
 }
+export let blDtS2: ballType = {
+      posi: [bdDt.size[0]/2, bdDt.size[1]/2, 20],
+      size: [20,15,15],
+      txtu: "white"
+  }
+  
+  export let ply2S2: playerType = {
+        nmPl:'',
+        posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
+        size: [100,10,30],
+        txtu: 'red'
+  }
+  export let ply1S2: playerType = {
+        nmPl: '',
+        posi: [bdDt.size[0]/2,70,15],
+        size: [100,10,30],
+        txtu: 'blue'
+  }
 
-export let gameData: gameType={
+export let gameDataS1: gameType={
       nbPl: 0,
-      ball:  blDt,
-      plyrs: [ply1,ply2],
+      ball:  blDtS1,
+      plyrs: [ply1S1,ply2S1],
+      board: bdDt
+}
+
+export let gameDataS2: gameType={
+      nbPl: 0,
+      ball:  blDtS2,
+      plyrs: [ply2S2,ply1S2],
       board: bdDt
 }
 
@@ -98,10 +125,3 @@ export const walls = [
       Bodies.rectangle(0, bdDt.size[1] / 2, 40, bdDt.size[1], { isStatic: true }), // Left wall
       Bodies.rectangle(bdDt.size[0], bdDt.size[1] / 2, 40, bdDt.size[1], { isStatic: true }) // Right wall
     ];
-
-
-export function map_(value: number, inRange: Matter.Vector, outRange: Matter.Vector): number{
-      let out: number;
-      out = outRange.x + ((outRange.y - outRange.x) / (inRange.y - inRange.x)) * (value - inRange.x);
-      return (out * inRange.y/2);
-}

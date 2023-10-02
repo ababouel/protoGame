@@ -1,5 +1,5 @@
 import { Box } from "@react-three/drei";
-import { ballEntity, boardEntity } from "./dataMapper";
+import { ballEntity, boardEntity } from "../entity/entity";
 
 
 export function Walls(){

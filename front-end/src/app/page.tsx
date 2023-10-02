@@ -1,9 +1,9 @@
-import { Scene } from './game/ui/scene'
+import { SceneGame } from './game/ui/scene'
 
 export default function Home() {
   return (
     <main className="w-screen h-screen items-center ">
-       <Scene />
+       <SceneGame />
     </main>
   )
 }

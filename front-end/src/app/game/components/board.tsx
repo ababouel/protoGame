@@ -15,6 +15,5 @@ export function Board(boardProps:boardType){
     return (
         <Plane position={boardProps.position} args={boardProps.size}>
             <meshBasicMaterial map={colorMap}/>
-        </Plane>
-        )
+        </Plane>)
 };

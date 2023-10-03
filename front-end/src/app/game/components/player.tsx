@@ -1,11 +1,12 @@
 import { Box } from "@react-three/drei"
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { left, player1, player2, right, room, socket, status } from "../entity/entity";
+import {  player1,  player2,  room, socket } from "../entity/entity";
 import { PlayerPosition } from "../utils/utils";
 
 export interface playerType {
     nmPl: string,
+    type: string,
     posi: [x:number, y:number, z:number]
     size: [length:number, width:number, height:number]
     txtu: string
@@ -26,16 +27,18 @@ export function Player(playerProps:playerType)  {
             player.current.position.y = playerProps.posi[1];
             player.current.position.z = playerProps.posi[2];
         }
-        // if (status.nbPl == 2 ){
-            if (arrowLeft){
-                left(player1);
+        if ( socket.id == player1.nmPl ){
+            if (arrowLeft)
                 socket.emit('moveLeft',room,player1.nmPl);
-            }
-            if (arrowRight){
-                right(player1);
+            if (arrowRight)
                 socket.emit('moveRight',room,player1.nmPl);
-            }
-        // }
+        } 
+        if (socket.id == player2.nmPl){
+            if (arrowLeft)
+                socket.emit('moveRight',room,player1.nmPl);
+            if (arrowRight)
+                socket.emit('moveLeft',room,player1.nmPl);
+        }
     });
     return (
     <Box ref={player} args={playerProps.size}>

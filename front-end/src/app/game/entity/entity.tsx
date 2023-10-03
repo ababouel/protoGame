@@ -8,8 +8,9 @@ export const room = 'gameRoom';
 export const socket =  io('http://localhost:5500');
 
 
-  export let player1:playerType = {
+export let player1:playerType = {
     nmPl: '',
+    type: '',
     posi: [0,-330,15],
     size: [100,10,30],
     txtu: "red"
@@ -17,6 +18,7 @@ export const socket =  io('http://localhost:5500');
   
   export let player2:playerType = {
     nmPl: '',
+    type: '',
     posi: [0,330,15],
     size: [100,10,30],
     txtu: "blue"

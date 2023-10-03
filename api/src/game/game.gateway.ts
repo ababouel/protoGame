@@ -44,16 +44,18 @@ export class GameGateway implements OnGatewayDisconnect {
   @SubscribeMessage('joinGame')
   joinRoom(client: Socket, room: string) {
     client.join(room);
-    console.log(client.id + " connected "+ clients[1]);
+    console.log(client.id + " connected ");
     if (clients[0] == null)
       clients[0] = client.id;
     else if (clients[1] == null)
       clients[1] = client.id;
     if ( gameDataS1.nbPl < 2)
       gameDataS1.nbPl += 1; 
-    console.log("=> "+clients[0]);
-    console.log("=> "+clients[1]);
     console.log(gameDataS1.nbPl);
+    if (clients[0] != null && clients[1] != null){
+      gameDataS1.plyrs[0].nmPl = clients[0];
+      gameDataS1.plyrs[1].nmPl = clients[1];
+    }
     this.server.to(room).emit('joinedGame', this.gameService.getGameDataS1());
   }
 
@@ -70,10 +72,7 @@ export class GameGateway implements OnGatewayDisconnect {
   startGame(client: Socket, room: string){
     this.gameService.startgame();
     console.log("startgame");
-    // if (client.id == clients[0])
-      this.server.to(room).emit('startGame', this.gameService.getGameDataS1());
-    // if (client.id == clients[1])
-      // this.server.to(room).emit('startGame', this.gameService.getGameDataS2());
+    this.server.to(room).emit('startGame', this.gameService.getGameDataS1());
   }
   
 
@@ -86,18 +85,11 @@ export class GameGateway implements OnGatewayDisconnect {
   @SubscribeMessage('moveLeft')
   moveLeft(client:Socket,room:string){
     this.gameService.movePlayer('left',client.id, clients);
-    // if (client.id == this.clients[0])
-      this.server.to(room).emit('updateGame', this.gameService.getGameDataS1());
-    // if (client.id == this.clients[1])
-    //   this.server.to(room).emit('updateGame', this.gameService.getGameDataS2());
+    this.server.to(room).emit('updateGame', this.gameService.getGameDataS1());
   }
 
   @SubscribeMessage('update')
   gameUpdate(client: Socket,room: string) {
-    console.log();
-    // if (client.id == this.clients[0])
       this.server.to(room).emit('updateGame', this.gameService.getGameDataS1());
-    // if (client.id == this.clients[1])
-    //   this.server.to(room).emit('updateGame', this.gameService.getGameDataS2()); 
   }
 }

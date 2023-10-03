@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { Socket } from "socket.io-client";
-import { ballEntity, player1, player2, status } from "../entity/entity";
+import { ballEntity, player1, player2,  status } from "../entity/entity";
 
 export function PlayerPosition(direction:string) : boolean{
     const [arrowDirection, setArrowDirection] = useState(false);
@@ -37,7 +37,6 @@ export function PlayerPosition(direction:string) : boolean{
     };
     if (!socket.hasListeners('disconnect')){
       socket.on("disconnect", () => {
-          console.log(socket.id);
           socket.emit('leaveGame', room);
           status.name = 'gameOver'
       });
@@ -47,8 +46,11 @@ export function PlayerPosition(direction:string) : boolean{
       socket.on('joinedGame', (data) => {
         const parsedData = JSON.parse(data);
         if (parsedData.nbPl == 2){
-          player1.nmPl = parsedData.plyrs[0];
-          player2.nmPl = parsedData.plyrs[1];
+          console.log("startgame=" + parsedData.plyrs[0].nmPl);
+          player1.nmPl = parsedData.plyrs[0].nmPl;
+          player1.type = parsedData.plyrs[0].type;
+          player2.nmPl = parsedData.plyrs[1].nmPl;
+          player2.type = parsedData.plyrs[1].type;
           socket.emit('startGame', room);
         } 
         status.nbPl = parsedData.nbPl;

@@ -6,7 +6,6 @@ interface boardType {
       size:[number,number],
       txtu: string
 }
-
 export interface ballType {
       posi: [x: number, y: number, z: number],
       size: [rad: number, w: number, h: number],
@@ -14,11 +13,11 @@ export interface ballType {
 }
 export interface playerType {
       nmPl: string,
+      type: string,
       posi: [x:number, y:number, z:number],
       size:[width:number,height:number,depth:number],
       txtu: string
 }
-
 export interface gameType{
       nbPl:number,
       ball:  ballType,
@@ -32,23 +31,23 @@ export const bdDt: boardType = {
     txtu: 'green'
 }
 
+export let clients : [string,string] = [null,null];
+
 export const bl: ballType = {
       posi: [bdDt.size[0]/2, bdDt.size[1]/2, 20],
       size: [20,15,15],
       txtu: "white"
 }
-
-export let clients : [string,string] = [null,null];
-
 export const p1: playerType = {
       nmPl:'player1',
+      type: 'Home',
       posi: [bdDt.size[0]/2, 70, 15],
       size: [100,10,30],
       txtu: 'red'
 }
-
 export const p2: playerType = {
       nmPl: 'player2',
+      type: 'Away',
       posi: [bdDt.size[0]/2,bdDt.size[1] - 70,15],
       size: [100,10,30],
       txtu: 'blue'
@@ -59,37 +58,21 @@ export let blDtS1: ballType = {
     size: [20,15,15],
     txtu: "white"
 }
-
 export let ply2S1: playerType = {
       nmPl:'',
+      type:'Away',
       posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
       size: [100,10,30],
       txtu: 'red'
 }
 export let ply1S1: playerType = {
       nmPl: '',
+      type:'Home',
       posi: [bdDt.size[0]/2,70,15],
       size: [100,10,30],
       txtu: 'blue'
 }
-export let blDtS2: ballType = {
-      posi: [bdDt.size[0]/2, bdDt.size[1]/2, 20],
-      size: [20,15,15],
-      txtu: "white"
-  }
-  
-  export let ply2S2: playerType = {
-        nmPl:'',
-        posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
-        size: [100,10,30],
-        txtu: 'red'
-  }
-  export let ply1S2: playerType = {
-        nmPl: '',
-        posi: [bdDt.size[0]/2,70,15],
-        size: [100,10,30],
-        txtu: 'blue'
-  }
+
 
 export let gameDataS1: gameType={
       nbPl: 0,
@@ -98,12 +81,7 @@ export let gameDataS1: gameType={
       board: bdDt
 }
 
-export let gameDataS2: gameType={
-      nbPl: 0,
-      ball:  blDtS2,
-      plyrs: [ply2S2,ply1S2],
-      board: bdDt
-}
+
 
 export const ballOptions ={
       mass: 0.2,

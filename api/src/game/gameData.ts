@@ -1,4 +1,4 @@
-import Matter, { Bodies } from 'matter-js';
+import  { Bodies } from 'matter-js';
 
 
 interface boardType {
@@ -53,19 +53,19 @@ export const p2: playerType = {
       txtu: 'blue'
 }
 
-export let blDtS1: ballType = {
+export let blDt: ballType = {
     posi: [bdDt.size[0]/2, bdDt.size[1]/2, 20],
     size: [20,15,15],
     txtu: "white"
 }
-export let ply2S1: playerType = {
+export let ply2: playerType = {
       nmPl:'',
       type:'Away',
       posi: [bdDt.size[0]/2,bdDt.size[1] - 70, 15],
       size: [100,10,30],
       txtu: 'red'
 }
-export let ply1S1: playerType = {
+export let ply1: playerType = {
       nmPl: '',
       type:'Home',
       posi: [bdDt.size[0]/2,70,15],
@@ -76,8 +76,8 @@ export let ply1S1: playerType = {
 
 export let gameDataS1: gameType={
       nbPl: 0,
-      ball:  blDtS1,
-      plyrs: [ply1S1,ply2S1],
+      ball:  blDt,
+      plyrs: [ply1,ply2],
       board: bdDt
 }
 
@@ -85,7 +85,7 @@ export let gameDataS1: gameType={
 
 export const ballOptions ={
       mass: 0.2,
-      force: { x: 0.001, y: 0.003},
+      force: { x: 0.0003, y: 0.0005},
       density: 0.001,
       friction: 0,
       restitution: 1,
@@ -98,8 +98,8 @@ export const staticOption = {
 }
 
 export const walls = [
-      Bodies.rectangle(bdDt.size[0] / 2, 0, bdDt.size[0] , 40, { isStatic: true }), // Top wall
-      Bodies.rectangle(bdDt.size[0] / 2, bdDt.size[1], bdDt.size[0], 40, { isStatic: true }), // Bottom wall
+      Bodies.rectangle(bdDt.size[0] / 2, 0, bdDt.size[0] , 40, { isStatic: true, restitution: 1 }), // Top wall
+      Bodies.rectangle(bdDt.size[0] / 2, bdDt.size[1], bdDt.size[0], 40, { isStatic: true, restitution:1 }), // Bottom wall
       Bodies.rectangle(0, bdDt.size[1] / 2, 40, bdDt.size[1], { isStatic: true }), // Left wall
-      Bodies.rectangle(bdDt.size[0], bdDt.size[1] / 2, 40, bdDt.size[1], { isStatic: true }) // Right wall
-    ];
+      Bodies.rectangle(bdDt.size[0], bdDt.size[1] / 2, 40, bdDt.size[1], { isStatic: true, restitution: 1 }) // Right wall
+];

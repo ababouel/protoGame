@@ -45,7 +45,7 @@ export function PlayerPosition(direction:string) : boolean{
     if (!socket.hasListeners('joinedGame')){
       socket.on('joinedGame', (data) => {
         const parsedData = JSON.parse(data);
-        if (parsedData.nbPl == 2){
+        if (parsedData.nbPl == 2) {
           console.log("startgame=" + parsedData.plyrs[0].nmPl);
           player1.nmPl = parsedData.plyrs[0].nmPl;
           player1.type = parsedData.plyrs[0].type;
@@ -68,6 +68,8 @@ export function PlayerPosition(direction:string) : boolean{
         const parsedData = JSON.parse(data);
         ballEntity.position[0] = parsedData.ball.posi[0];
         ballEntity.position[1] = parsedData.ball.posi[1];
+        console.log("ballX=> "+ballEntity.position[0]);
+        console.log("ballY=> "+ballEntity.position[1]);
         player1.posi[0] = parsedData.plyrs[0].posi[0];
         player1.posi[1] = parsedData.plyrs[0].posi[1];
         player2.posi[0] = parsedData.plyrs[1].posi[0];
